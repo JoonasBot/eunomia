@@ -50,7 +50,7 @@ def apply_operator(
         elif operator_type == enums.ConditionOperator.ENDS_WITH:
             return target.endswith(value)
         
-    if isinstance(value, str) and isinstance(target, list):
+    elif isinstance(value, str) and isinstance(target, list):
         if operator_type == enums.ConditionOperator.IN:
             return value in target
         elif operator_type == enums.ConditionOperator.NOT_IN:
