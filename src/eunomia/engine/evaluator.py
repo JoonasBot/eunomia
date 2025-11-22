@@ -62,9 +62,9 @@ def apply_operator(
 
     elif isinstance(target, list):
         if operator_type == enums.ConditionOperator.IN:
-            return target in value
+            return value in target
         elif operator_type == enums.ConditionOperator.NOT_IN:
-            return target not in value
+            return value not in target
 
     return False
 
