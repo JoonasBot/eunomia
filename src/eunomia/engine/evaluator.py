@@ -60,11 +60,11 @@ def apply_operator(
         elif operator_type == enums.ConditionOperator.LESS_OR_EQUAL:
             return value <= target
 
-    elif isinstance(value, list):
+    elif isinstance(target, list):
         if operator_type == enums.ConditionOperator.IN:
-            return target in value
+            return value in target
         elif operator_type == enums.ConditionOperator.NOT_IN:
-            return target not in value
+            return value not in target
 
     return False
 
