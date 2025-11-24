@@ -80,9 +80,14 @@ def test_apply_operator():
 
     # List membership operators - both value and target are lists
     assert apply_operator(enums.ConditionOperator.IN, [1, 2], [1, 2, 3]) is True
+    assert apply_operator(enums.ConditionOperator.IN, [1, 2], [2, 1]) is True
     assert apply_operator(enums.ConditionOperator.IN, [4, 5], [1, 2, 3]) is False
     assert apply_operator(enums.ConditionOperator.NOT_IN, [4, 5], [1, 2, 3]) is True
     assert apply_operator(enums.ConditionOperator.NOT_IN, [1, 2], [1, 2, 3]) is False
+    assert apply_operator(enums.ConditionOperator.IN, ["a"], ["a", "b", "c"]) is True
+    assert apply_operator(enums.ConditionOperator.NOT_IN, ["d"], ["a", "b", "c"]) is True
+    assert apply_operator(enums.ConditionOperator.NOT_IN, ["a", "b"], ["a", "b", "c"]) is False
+        
 
     # List membership operators - target is a list
     assert apply_operator(enums.ConditionOperator.IN, "admin", ["admin", "user"]) is True
