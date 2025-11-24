@@ -78,11 +78,23 @@ def test_apply_operator():
     assert apply_operator(enums.ConditionOperator.GREATER, 5, 3.5) is True
     assert apply_operator(enums.ConditionOperator.LESS, 3.5, 5) is True
 
+    # List membership operators - both value and target are lists
+    assert apply_operator(enums.ConditionOperator.IN, [1, 2], [1, 2, 3]) is True
+    assert apply_operator(enums.ConditionOperator.IN, [4, 5], [1, 2, 3]) is False
+    assert apply_operator(enums.ConditionOperator.NOT_IN, [4, 5], [1, 2, 3]) is True
+    assert apply_operator(enums.ConditionOperator.NOT_IN, [1, 2], [1, 2, 3]) is False
+
     # List membership operators - target is a list
     assert apply_operator(enums.ConditionOperator.IN, "admin", ["admin", "user"]) is True
     assert apply_operator(enums.ConditionOperator.IN, "guest", ["admin", "user"]) is False
     assert apply_operator(enums.ConditionOperator.NOT_IN, "guest", ["admin", "user"]) is True
     assert apply_operator(enums.ConditionOperator.NOT_IN, "admin", ["admin", "user"]) is False
+
+    # List membershipt operators  - value is a list
+    assert apply_operator(enums.ConditionOperator.IN, ["admin", "user"], "admin") is True
+    assert apply_operator(enums.ConditionOperator.IN, ["guest", "visitor"], "admin") is False
+    assert apply_operator(enums.ConditionOperator.NOT_IN, ["guest", "visitor"], "admin") is True
+    assert apply_operator(enums.ConditionOperator.NOT_IN, ["admin", "user"], "admin") is False
 
     # List with numbers - target is a list
     assert apply_operator(enums.ConditionOperator.IN, 2, [1, 2, 3]) is True

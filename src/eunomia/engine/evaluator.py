@@ -59,12 +59,25 @@ def apply_operator(
             return value < target
         elif operator_type == enums.ConditionOperator.LESS_OR_EQUAL:
             return value <= target
+    
+    elif isinstance(value, list) and isinstance(target, list):
+        if operator_type == enums.ConditionOperator.IN:
+            return all(item in target for item in value)
+        elif operator_type == enums.ConditionOperator.NOT_IN:
+            return all(item not in target for item in value)
 
     elif isinstance(target, list):
         if operator_type == enums.ConditionOperator.IN:
             return value in target
         elif operator_type == enums.ConditionOperator.NOT_IN:
             return value not in target
+    
+    elif isinstance(value, list):
+        if operator_type == enums.ConditionOperator.IN:
+            return target in value
+        elif operator_type == enums.ConditionOperator.NOT_IN:
+            return target not in value
+    
 
     return False
 
