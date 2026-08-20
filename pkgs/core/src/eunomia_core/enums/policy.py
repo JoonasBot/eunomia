@@ -22,3 +22,5 @@ class ConditionOperator(str, Enum):
     # List operators
     IN = "in"
     NOT_IN = "not_in"
+    SUBSET = "subset"
+    NOT_SUBSET = "not_subset"

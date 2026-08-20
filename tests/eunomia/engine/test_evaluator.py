@@ -78,31 +78,32 @@ def test_apply_operator():
     assert apply_operator(enums.ConditionOperator.GREATER, 5, 3.5) is True
     assert apply_operator(enums.ConditionOperator.LESS, 3.5, 5) is True
 
-    # List membership operators
-    assert (
-        apply_operator(enums.ConditionOperator.IN, ["admin", "user"], "admin") is True
-    )
-    assert (
-        apply_operator(enums.ConditionOperator.IN, ["admin", "user"], "guest") is False
-    )
-    assert (
-        apply_operator(enums.ConditionOperator.NOT_IN, ["admin", "user"], "guest")
-        is True
-    )
-    assert (
-        apply_operator(enums.ConditionOperator.NOT_IN, ["admin", "user"], "admin")
-        is False
-    )
+    # Subset operators - both value and target are lists
+    assert apply_operator(enums.ConditionOperator.SUBSET, [1, 2], [1, 2, 3]) is True
+    assert apply_operator(enums.ConditionOperator.SUBSET, [1, 2], [2, 1]) is True
+    assert apply_operator(enums.ConditionOperator.SUBSET, [4, 5], [1, 2, 3]) is False
+    assert apply_operator(enums.ConditionOperator.NOT_SUBSET, [4, 5], [1, 2, 3]) is True
+    assert apply_operator(enums.ConditionOperator.NOT_SUBSET, [1, 2], [1, 2, 3]) is False
+    assert apply_operator(enums.ConditionOperator.SUBSET, ["a"], ["a", "b", "c"]) is True
+    assert apply_operator(enums.ConditionOperator.NOT_SUBSET, ["d"], ["a", "b", "c"]) is True
+    assert apply_operator(enums.ConditionOperator.NOT_SUBSET, ["a", "b"], ["a", "b", "c"]) is False
+        
 
-    # List with numbers
-    assert apply_operator(enums.ConditionOperator.IN, [1, 2, 3], 2) is True
-    assert apply_operator(enums.ConditionOperator.IN, [1, 2, 3], 4) is False
-    assert apply_operator(enums.ConditionOperator.NOT_IN, [1, 2, 3], 4) is True
-    assert apply_operator(enums.ConditionOperator.NOT_IN, [1, 2, 3], 2) is False
+    # List membership operators - target is a list (IN/NOT_IN with scalar value)
+    assert apply_operator(enums.ConditionOperator.IN, "admin", ["admin", "user"]) is True
+    assert apply_operator(enums.ConditionOperator.IN, "guest", ["admin", "user"]) is False
+    assert apply_operator(enums.ConditionOperator.NOT_IN, "guest", ["admin", "user"]) is True
+    assert apply_operator(enums.ConditionOperator.NOT_IN, "admin", ["admin", "user"]) is False
 
-    # Empty list
-    assert apply_operator(enums.ConditionOperator.IN, [], "anything") is False
-    assert apply_operator(enums.ConditionOperator.NOT_IN, [], "anything") is True
+    # List with numbers - target is a list (IN/NOT_IN with scalar value)
+    assert apply_operator(enums.ConditionOperator.IN, 2, [1, 2, 3]) is True
+    assert apply_operator(enums.ConditionOperator.IN, 4, [1, 2, 3]) is False
+    assert apply_operator(enums.ConditionOperator.NOT_IN, 4, [1, 2, 3]) is True
+    assert apply_operator(enums.ConditionOperator.NOT_IN, 2, [1, 2, 3]) is False
+
+    # Empty list - target is a list
+    assert apply_operator(enums.ConditionOperator.IN, "anything", []) is False
+    assert apply_operator(enums.ConditionOperator.NOT_IN, "anything", []) is True
 
     # None value handling
     assert apply_operator(enums.ConditionOperator.EQUALS, None, "test") is False
@@ -114,7 +115,14 @@ def test_apply_operator():
     assert apply_operator(enums.ConditionOperator.CONTAINS, 123, "test") is False
     assert apply_operator(enums.ConditionOperator.STARTS_WITH, 123, "test") is False
     assert apply_operator(enums.ConditionOperator.GREATER, "abc", "def") is False
+    
+    # IN operator requires target to be a list
     assert apply_operator(enums.ConditionOperator.IN, "not_a_list", "test") is False
+    assert apply_operator(enums.ConditionOperator.IN, ["admin", "user"], "admin") is False
+    
+    # SUBSET operator requires both value and target to be lists
+    assert apply_operator(enums.ConditionOperator.SUBSET, "admin", ["admin", "user"]) is False
+    assert apply_operator(enums.ConditionOperator.SUBSET, ["admin"], "not_a_list") is False
 
 
 def test_evaluate_condition():

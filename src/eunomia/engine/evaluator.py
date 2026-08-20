@@ -59,12 +59,20 @@ def apply_operator(
             return value < target
         elif operator_type == enums.ConditionOperator.LESS_OR_EQUAL:
             return value <= target
+    
+    # Subset operators: check if all items in value (list) are in target (list)
+    elif isinstance(value, list) and isinstance(target, list):
+        if operator_type == enums.ConditionOperator.SUBSET:
+            return all(item in target for item in value)
+        elif operator_type == enums.ConditionOperator.NOT_SUBSET:
+            return all(item not in target for item in value)
 
-    elif isinstance(value, list):
+    # IN/NOT_IN operators: target must be a collection (list)
+    elif isinstance(target, list):
         if operator_type == enums.ConditionOperator.IN:
-            return target in value
+            return value in target
         elif operator_type == enums.ConditionOperator.NOT_IN:
-            return target not in value
+            return value not in target
 
     return False
 
